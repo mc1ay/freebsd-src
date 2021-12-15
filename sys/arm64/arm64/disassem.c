@@ -136,6 +136,8 @@ static struct arm64_insn arm64_i[] = {
 	    TYPE_01, 0 },
 	{ "add", "SF(1)|0010001|SHIFT(2)|IMM(12)|RN(5)|RD(5)",
 	    TYPE_01, 0 },
+	{ "sub", "SF(1)|1010001|SHIFT(2)|IMM(12)|RN(5)|RD(5)",
+	    TYPE_01, 0 },
 	{ "ldr", "1|SF(1)|111000010|IMM(9)|OPTION(2)|RN(5)|RT(5)",
 	    TYPE_02, OP_SIGN_EXT },		/* ldr immediate post/pre index */
 	{ "ldr", "1|SF(1)|11100101|IMM(12)|RN(5)|RT(5)",
