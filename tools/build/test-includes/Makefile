@@ -13,11 +13,11 @@
 # programs to detect FreeBSD has different headers, omitting internal
 # headers cuts down on the noise w/o causing problems for the goal.
 #
-PROG=	test-includes
-SRCS=	test-includes.c
-INTERNALPROG=	This is a compile-only test
+LIB=	test-includes
+INTERNALLIB=	This is a compile-only test
 MAN=
-HDRS!=	(cd ${SRCTOP}/sys; ls sys/[^_]*.h net*/[^_]*.h)
+HDRS!=	(cd ${SRCTOP}/sys; ls sys/[^_]*.h | sort ; ls net*/[^_]*.h | sort)
+NO_PIC=	yes
 
 # Some files have to be clean for extra defines too...
 CFLAGS.event.c=	-D_WANT_KEVENT32 -D_WANT_FREEBSD11_KEVENT
@@ -33,6 +33,8 @@ ${h:R}.c:
 .endif
 .endfor
 
+test-includes: lib${LIB}.a .PHONY
+
 #
 # Target to make the current known bad list. In general, this list should only
 # ever shrink and never grow.
@@ -42,11 +44,11 @@ badfiles.inc:
 	@(cd ${SRCTOP}/sys;							\
 	echo "# DO NOT EDIT-- this file is automatically @""generated.";	\
 	echo "BADHDRS= \\";							\
-	for i in sys/*.h net*/*.h; do						\
+	for i in ${HDRS}; do						\
 		echo "#include <$$i>" |						\
 			${CC} ${CFLAGS} -xc - -c -o /dev/null 2> /dev/null ||	\
 			echo "	$$i \\";					\
 	done;									\
 	echo) > ${.CURDIR}/badfiles.inc
 
-.include <bsd.prog.mk>
+.include <bsd.lib.mk>

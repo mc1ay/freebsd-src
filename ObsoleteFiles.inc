@@ -40,6 +40,15 @@
 #   xargs -n1 | sort | uniq -d;
 # done
 
+# 20211229 libc++ moved to /lib
+OLD_LIBS+=usr/lib/libc++.so.1
+
+# 20211221 efi_set_variables_supported.3 should be efi_variables_supported.3
+OLD_FILES+=usr/share/man/man3/efi_set_variables_supported.3.gz
+
+# 20211218 meteor.4 removed, see also 20200301 entry below
+OLD_FILES+=usr/share/man/man4/meteor.4.gz
+
 # 20211125 Old SCSI drivers removed
 OLD_FILES+=usr/share/man/man4/amr.4.gz
 OLD_FILES+=usr/share/man/man4/esp.4.gz
@@ -4491,7 +4500,6 @@ OLD_FILES+=usr/share/man/man4/if_hme.4.gz
 OLD_FILES+=usr/include/net/radix_mpath.h
 
 # 20201124: ping6(8) was merged into ping(8)
-OLD_FILES+=usr/lib/debug/sbin/ping6.debug
 OLD_FILES+=usr/share/man/man8/ping6.8.gz
 OLD_FILES+=usr/tests/sbin/ping6/Kyuafile
 OLD_FILES+=usr/tests/sbin/ping6/ping6_c1_s8_t1.out
@@ -7486,16 +7494,6 @@ OLD_FILES+=usr/include/openssl/kssl.h
 OLD_FILES+=usr/include/openssl/pqueue.h
 OLD_FILES+=usr/include/openssl/ssl23.h
 OLD_FILES+=usr/include/openssl/ui_compat.h
-OLD_FILES+=usr/lib/debug/usr/lib/engines/lib4758cca.so.debug
-OLD_FILES+=usr/lib/debug/usr/lib/engines/libaep.so.debug
-OLD_FILES+=usr/lib/debug/usr/lib/engines/libatalla.so.debug
-OLD_FILES+=usr/lib/debug/usr/lib/engines/libcapi.so.debug
-OLD_FILES+=usr/lib/debug/usr/lib/engines/libchil.so.debug
-OLD_FILES+=usr/lib/debug/usr/lib/engines/libcswift.so.debug
-OLD_FILES+=usr/lib/debug/usr/lib/engines/libgost.so.debug
-OLD_FILES+=usr/lib/debug/usr/lib/engines/libnuron.so.debug
-OLD_FILES+=usr/lib/debug/usr/lib/engines/libsureware.so.debug
-OLD_FILES+=usr/lib/debug/usr/lib/engines/libubsec.so.debug
 OLD_FILES+=usr/share/openssl/man/man1/dss1.1.gz
 OLD_FILES+=usr/share/openssl/man/man1/md2.1.gz
 OLD_FILES+=usr/share/openssl/man/man1/md4.1.gz
@@ -7639,8 +7637,6 @@ OLD_FILES+=usr/share/openssl/man/man3/d2i_ECPrivate_key.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/d2i_Netscape_RSA.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/d2i_PKCS8PrivateKey.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/d2i_Private_key.3.gz
-OLD_FILES+=usr/share/openssl/man/man3/d2i_X509_bio.3.gz
-OLD_FILES+=usr/share/openssl/man/man3/d2i_X509_fp.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/des.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/des_read_2passwords.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/des_read_password.3.gz
@@ -7657,8 +7653,6 @@ OLD_FILES+=usr/share/openssl/man/man3/hmac.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/i2d_ECPKParameters_bio.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/i2d_ECPKParameters_fp.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/i2d_Netscape_RSA.3.gz
-OLD_FILES+=usr/share/openssl/man/man3/i2d_X509_bio.3.gz
-OLD_FILES+=usr/share/openssl/man/man3/i2d_X509_fp.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/lh_delete.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/lh_doall.3.gz
 OLD_FILES+=usr/share/openssl/man/man3/lh_doall_arg.3.gz
@@ -9240,8 +9234,6 @@ OLD_FILES+=usr/include/net/if_atm.h
 OLD_FILES+=usr/include/netgraph/atm/ng_atm.h
 OLD_FILES+=usr/include/netinet/if_atm.h
 OLD_FILES+=usr/include/netnatm/natm.h
-OLD_FILES+=usr/lib/debug/sbin/atmconfig.debug
-OLD_FILES+=usr/lib/debug/usr/lib/snmp_atm.so.6.debug
 OLD_FILES+=usr/lib/snmp_atm.so
 OLD_LIBS+=usr/lib/snmp_atm.so.6
 OLD_FILES+=usr/share/doc/atm/atmconfig.help
@@ -9438,7 +9430,6 @@ OLD_FILES+=usr/share/man/man4/ahb.4.gz
 OLD_FILES+=usr/share/man/man4/fea.4.gz
 # 20170206: remove bdes(1)
 OLD_FILES+=usr/bin/bdes
-OLD_FILES+=usr/lib/debug/usr/bin/bdes.debug
 OLD_FILES+=usr/share/man/man1/bdes.1.gz
 # 20170206: merged projects/ipsec
 OLD_FILES+=usr/include/netinet/ip_ipsec.h

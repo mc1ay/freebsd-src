@@ -225,6 +225,7 @@
 #define	 EXCP_SVC64		0x15	/* SVC trap for AArch64 */
 #define	 EXCP_HVC		0x16	/* HVC trap */
 #define	 EXCP_MSR		0x18	/* MSR/MRS trap */
+#define	 EXCP_FPAC		0x1c	/* Faulting PAC trap */
 #define	 EXCP_INSN_ABORT_L	0x20	/* Instruction abort, from lower EL */
 #define	 EXCP_INSN_ABORT	0x21	/* Instruction abort, from same EL */ 
 #define	 EXCP_PC_ALIGN		0x22	/* PC alignment fault */
@@ -1186,6 +1187,13 @@
 #else
 #define	TCR_SMP_ATTRS	0
 #endif
+
+/* TTBR0_EL1 & TTBR1_EL1 - Translation Table Base Register 0 & 1 */
+#define	TTBR_ASID_SHIFT		48
+#define	TTBR_ASID_MASK		(0xfffful << TTBR_ASID_SHIFT)
+#define	TTBR_BADDR		0x0000fffffffffffeul
+#define	TTBR_CnP_SHIFT		0
+#define	TTBR_CnP		(1ul << TTBR_CnP_SHIFT)
 
 /* Saved Program Status Register */
 #define	DBG_SPSR_SS	(0x1 << 21)

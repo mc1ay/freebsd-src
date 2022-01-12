@@ -251,6 +251,8 @@ MAN=	aac.4 \
 	iwmfw.4 \
 	iwn.4 \
 	iwnfw.4 \
+	iwlwifi.4 \
+	iwlwififw.4 \
 	ixgbe.4 \
 	ixl.4 \
 	jedec_dimm.4 \
@@ -296,7 +298,6 @@ MAN=	aac.4 \
 	mdio.4 \
 	me.4 \
 	mem.4 \
-	meteor.4 \
 	mfi.4 \
 	${_mgb.4} \
 	miibus.4 \

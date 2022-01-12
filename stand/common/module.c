@@ -113,9 +113,8 @@ command_load(int argc, char *argv[])
 	struct preloaded_file *fp;
 	char	*typestr;
 #ifdef LOADER_VERIEXEC
-	char	*prefix;
+	char	*prefix, *skip;
 #endif
-	char	*skip;
 	int		dflag, dofile, dokld, ch, error;
 
 	dflag = dokld = dofile = 0;
@@ -128,8 +127,8 @@ command_load(int argc, char *argv[])
 	}
 #ifdef LOADER_VERIEXEC
 	prefix = NULL;
-#endif
 	skip = NULL;
+#endif
 	while ((ch = getopt(argc, argv, "dkp:s:t:")) != -1) {
 		switch(ch) {
 		case 'd':
@@ -142,10 +141,10 @@ command_load(int argc, char *argv[])
 		case 'p':
 			prefix = optarg;
 			break;
-#endif
 		case 's':
 			skip = optarg;
 			break;
+#endif
 		case 't':
 			typestr = optarg;
 			dofile = 1;
@@ -557,6 +556,7 @@ file_load(char *filename, vm_offset_t dest, struct preloaded_file **result)
 	int error;
 	int i;
 
+	TSENTER2(filename);
 	if (archsw.arch_loadaddr != NULL)
 		dest = archsw.arch_loadaddr(LOAD_RAW, filename, dest);
 
@@ -583,6 +583,7 @@ file_load(char *filename, vm_offset_t dest, struct preloaded_file **result)
 			break;
 		}
 	}
+	TSEXIT();
 	return (error);
 }
 
@@ -744,9 +745,11 @@ file_loadraw(const char *fname, char *type, int insert)
 	int			verror;
 #endif
 
+	TSENTER2(fname);
 	/* We can't load first */
 	if ((file_findfile(NULL, NULL)) == NULL) {
 		command_errmsg = "can't load file before kernel";
+		TSEXIT();
 		return(NULL);
 	}
 
@@ -755,6 +758,7 @@ file_loadraw(const char *fname, char *type, int insert)
 	if (name == NULL) {
 		snprintf(command_errbuf, sizeof(command_errbuf),
 		  "can't find '%s'", fname);
+		TSEXIT();
 		return(NULL);
 	}
 
@@ -762,6 +766,7 @@ file_loadraw(const char *fname, char *type, int insert)
 		snprintf(command_errbuf, sizeof(command_errbuf),
 		  "can't open '%s': %s", name, strerror(errno));
 		free(name);
+		TSEXIT();
 		return(NULL);
 	}
 
@@ -773,6 +778,7 @@ file_loadraw(const char *fname, char *type, int insert)
 		free(name);
 		free(vctx);
 		close(fd);
+		TSEXIT();
 		return(NULL);
 	}
 #else
@@ -782,6 +788,7 @@ file_loadraw(const char *fname, char *type, int insert)
 		    name, ve_error_get());
 		free(name);
 		close(fd);
+		TSEXIT();
 		return(NULL);
 	}
 #endif
@@ -806,6 +813,7 @@ file_loadraw(const char *fname, char *type, int insert)
 #ifdef LOADER_VERIEXEC_VECTX
 			free(vctx);
 #endif
+			TSEXIT();
 			return(NULL);
 		}
 		laddr += got;
@@ -818,6 +826,7 @@ file_loadraw(const char *fname, char *type, int insert)
 		free(name);
 		close(fd);
 		free(vctx);
+		TSEXIT();
 		return(NULL);
 	}
 #endif
@@ -829,6 +838,7 @@ file_loadraw(const char *fname, char *type, int insert)
 		    "no memory to load %s", name);
 		free(name);
 		close(fd);
+		TSEXIT();
 		return (NULL);
 	}
 	fp->f_name = name;
@@ -844,6 +854,7 @@ file_loadraw(const char *fname, char *type, int insert)
 		    "no memory to load %s", name);
 		free(name);
 		close(fd);
+		TSEXIT();
 		return (NULL);
 	}
 	/* recognise space consumption */
@@ -853,6 +864,7 @@ file_loadraw(const char *fname, char *type, int insert)
 	if (insert != 0)
 		file_insert_tail(fp);
 	close(fd);
+	TSEXIT();
 	return(fp);
 }
 
@@ -868,8 +880,10 @@ mod_load(char *modname, struct mod_depend *verinfo, int argc, char *argv[])
 	int				err;
 	char			*filename;
 
+	TSENTER2(modname);
 	if (file_havepath(modname)) {
 		printf("Warning: mod_load() called instead of mod_loadkld() for module '%s'\n", modname);
+		TSEXIT();
 		return (mod_loadkld(modname, argc, argv));
 	}
 	/* see if module is already loaded */
@@ -881,6 +895,7 @@ mod_load(char *modname, struct mod_depend *verinfo, int argc, char *argv[])
 #endif
 		snprintf(command_errbuf, sizeof(command_errbuf),
 		  "warning: module '%s' already loaded", mp->m_name);
+		TSEXIT();
 		return (0);
 	}
 	/* locate file with the module on the search path */
@@ -888,10 +903,12 @@ mod_load(char *modname, struct mod_depend *verinfo, int argc, char *argv[])
 	if (filename == NULL) {
 		snprintf(command_errbuf, sizeof(command_errbuf),
 		  "can't find '%s'", modname);
+		TSEXIT();
 		return (ENOENT);
 	}
 	err = mod_loadkld(filename, argc, argv);
 	free(filename);
+	TSEXIT();
 	return (err);
 }
 
@@ -907,6 +924,7 @@ mod_loadkld(const char *kldname, int argc, char *argv[])
 	char			*filename;
 	vm_offset_t		loadaddr_saved;
 
+	TSENTER2(kldname);
 	/*
 	 * Get fully qualified KLD name
 	 */
@@ -914,6 +932,7 @@ mod_loadkld(const char *kldname, int argc, char *argv[])
 	if (filename == NULL) {
 		snprintf(command_errbuf, sizeof(command_errbuf),
 		  "can't find '%s'", kldname);
+		TSEXIT();
 		return (ENOENT);
 	}
 	/*
@@ -924,6 +943,7 @@ mod_loadkld(const char *kldname, int argc, char *argv[])
 		snprintf(command_errbuf, sizeof(command_errbuf),
 		  "warning: KLD '%s' already loaded", filename);
 		free(filename);
+		TSEXIT();
 		return (0);
 	}
 
@@ -950,6 +970,7 @@ mod_loadkld(const char *kldname, int argc, char *argv[])
 	if (err)
 		file_discard(fp);
 	free(filename);
+	TSEXIT();
 	return (err);
 }
 
